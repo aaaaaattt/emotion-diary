@@ -1,4 +1,4 @@
-import { useReducer,useRef } from 'react';
+import { useReducer,useRef,useEffect } from 'react';
 import { Routes,Route,Link } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
@@ -7,26 +7,60 @@ import Diary from './pages/Diary';
 import Edit from './pages/Edit';
 
 function reducer(state, action) {
-  console.log(state)
+  
   switch (action.type){
     case "CREATE": {
       return [action.data, ...state];
-    }
-    default: {
-      return state;
     }
     case "UPDATE": {
       return state.map((it) => 
       String(it.id) === String(action.data.id) ? {...action.data} : it
       );
     }
-  }
-  return state
+    case "DELETE" : {
+      return state.filter((it) => String(it.id) !== String(action.targetId));
+    }
+    case "INIT" : {
+      return action.data;
+    }
+    default: {
+      return state;
+    }  
 }
+}
+//Mock 데이터
+const mockData = [
+  {
+    id: "mock1",
+    date: new Date().getTime(),
+    content: "mock1",
+    emotionId : 1,
+  },
+  {
+    id: "mock2",
+    date: new Date().getTime(),
+    content: "mock2",
+    emotionId : 2,
+  },
+  {
+    id: "mock3",
+    date: new Date().getTime(),
+    content: "mock3",
+    emotionId : 3,
+  },
+]
 
+//App() 컴포넌트
 function App() {
   const [data, dispatch] = useReducer(reducer, []);
   const idRef = useRef(0);
+
+  useEffect(()=>{
+    dispatch({
+      type:"INIT",
+      data: mockData,
+    });
+  },[]);
   
   //생성
   const onCreate = (date, content, emotionId) => {
@@ -54,6 +88,14 @@ function App() {
       },
     });
   };
+
+  //삭제
+  const onDelete = (targetId) => {
+    dispatch({
+      type:"DELETE",
+      targetId,
+    });
+  };
   return(
     <div className="App">
       <Routes>
@@ -65,5 +107,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
