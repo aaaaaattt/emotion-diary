@@ -1,3 +1,4 @@
+import Button from "./Button";
 import "./Header.css"
 
 const Header = ({title,leftChild,rightChild}) => {

@@ -10,7 +10,6 @@ export const DiaryStateContext = React.createContext();
 export const DiaryDispatchContext = React.createContext();
 
 function reducer(state, action) {
-  
   switch (action.type){
     case "CREATE": {
       return [action.data, ...state];
@@ -131,7 +130,6 @@ function App() {
       
     );
   }
-  
 }
 
 
